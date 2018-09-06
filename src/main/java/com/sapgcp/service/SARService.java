@@ -32,6 +32,9 @@ public class SARService {
 		storage = StorageOptions.getDefaultInstance().getService();
 	}
 
+	/*
+	 * This is to create a sar report based on the sar request
+	 */
 	public String createSARReport(SARRequest sarRequest) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -59,6 +62,9 @@ public class SARService {
 		return "error";
 	}
 	
+	/*
+	 * This is to create a folder
+	 */
 	public boolean createFolder(String customer_id) {
 		String folderName = customer_id + "/";
 		BlobInfo blobInfo = storage.create(BlobInfo.newBuilder("sap-gcp", folderName)
