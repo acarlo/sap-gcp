@@ -1,0 +1,41 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.sapgcp.com/xml/sar"
+	targetNamespace="http://www.sapgcp.com/xml/sar"
+	elementFormDefault="qualified">
+
+	<xs:element name="SARRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SARReport" type="tns:SARReport" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="SARResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="url" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="SARReport">
+		<xs:sequence>
+			<xs:element name="dataMap">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="key" minOccurs="0" type="xs:string" />
+									<xs:element name="value" minOccurs="0" type="xs:string" />
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>
