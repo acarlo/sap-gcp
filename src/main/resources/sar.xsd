@@ -1,11 +1,16 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://www.sapgcp.com/xml/sar"
-	targetNamespace="http://www.sapgcp.com/xml/sar"
+	xmlns:tns="http://www.gdpr.com/xml/sar"
+	targetNamespace="http://www.gdpr.com/xml/sar"
 	elementFormDefault="qualified">
 
 	<xs:element name="SARRequest">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element name="region" type="xs:string" />
+				<xs:element name="country" type="xs:string" />
+				<xs:element name="environment" type="xs:string" />
+				<xs:element name="customer_id" type="xs:string" />
+				<xs:element name="transaction_id" type="xs:string" />
 				<xs:element name="SARReport" type="tns:SARReport" />
 			</xs:sequence>
 		</xs:complexType>
@@ -14,6 +19,9 @@
 	<xs:element name="SARResponse">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element name="code" type="xs:int" />
+				<xs:element name="status" type="xs:string" />
+				<xs:element name="message" type="xs:string" />
 				<xs:element name="url" type="xs:string" />
 			</xs:sequence>
 		</xs:complexType>
@@ -21,14 +29,28 @@
 
 	<xs:complexType name="SARReport">
 		<xs:sequence>
-			<xs:element name="dataMap">
+			<xs:element name="dataHeader" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="name" type="xs:string" />
+						<xs:element name="item" minOccurs="0" maxOccurs="unbounded">
 							<xs:complexType>
 								<xs:sequence>
-									<xs:element name="key" minOccurs="0" type="xs:string" />
-									<xs:element name="value" minOccurs="0" type="xs:string" />
+									<xs:element name="isMultiple" type="xs:boolean" />
+									<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="column" minOccurs="0" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="key" minOccurs="0" type="xs:string" />
+															<xs:element name="value" minOccurs="0" type="xs:string" />
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
