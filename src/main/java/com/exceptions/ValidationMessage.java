@@ -2,7 +2,7 @@ package com.exceptions;
 
 public enum ValidationMessage {
 
-    INVALID_VALUE(102, "invalid_value", "invalid value provided");
+    INVALID_VALUE(1422, "invalid_value", "invalid value provided");
 
 
     private final String status;

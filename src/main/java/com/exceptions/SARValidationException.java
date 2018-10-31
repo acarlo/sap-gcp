@@ -22,4 +22,8 @@ public class SARValidationException extends Exception{
     public String getMessage() {
         return msg;
     }
+
+    public Integer getCode(){
+        return code;
+    }
 }

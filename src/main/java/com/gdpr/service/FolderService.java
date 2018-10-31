@@ -1,6 +1,7 @@
 package com.gdpr.service;
 
 import com.application.helper.Constants;
+import com.exceptions.SARValidationException;
 import com.gdpr.validator.Validator;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
@@ -34,7 +35,7 @@ public class FolderService {
             Validator.validateFolderRequest(folderRequest);
 
             if(folderExists(rootFolderStructure(folderRequest.getRegion(), folderRequest.getCountry(), folderRequest.getEnvironment(), folderRequest.getCustomerId()))){
-                folderResponse = prepareFolderResponse(1400, Constants.ERROR_STATUS, "Folder already exist", null);
+                folderResponse = prepareFolderResponse(1400, Constants.ERROR_STATUS, Constants.FOLDER_EXISTS, null);
                 return folderResponse;
             }
 
@@ -44,10 +45,15 @@ public class FolderService {
                     .setAcl(new ArrayList<>(Arrays.asList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))).build(), new ByteArrayInputStream(new byte[0]));
 
             String url = blobInfo.getMediaLink().replace("/download", "");
-            folderResponse = prepareFolderResponse(1200, Constants.SUCCESS_STATUS, "Folder has been created successfully", url);
+            folderResponse = prepareFolderResponse(1200, Constants.SUCCESS_STATUS, Constants.FOLDER_SUCCESS, url);
 
-        } catch (Exception e) {
-            folderResponse = prepareFolderResponse(1200, Constants.ERROR_STATUS, e.getMessage(), null);
+        } catch (SARValidationException e) {
+            folderResponse = prepareFolderResponse(e.getCode(), Constants.ERROR_STATUS, e.getMessage(), null);
+            return folderResponse;
+        }
+
+        catch (Exception e) {
+            folderResponse = prepareFolderResponse(1500, Constants.ERROR_STATUS, e.getMessage(), null);
             return folderResponse;
         }
 

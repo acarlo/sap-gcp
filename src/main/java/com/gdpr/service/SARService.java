@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.exceptions.SARValidationException;
 import com.gdpr.validator.Validator;
 import com.google.cloud.storage.Storage;
 import com.gdpr.xml.sar.SARRequest;
@@ -43,7 +44,7 @@ public class SARService {
 			Validator.validateSARRequest(sarRequest);
 
 			if(!folderService.folderExists(folderService.rootFolderStructure(sarRequest.getRegion(), sarRequest.getCountry(), sarRequest.getEnvironment(), sarRequest.getCustomerId()))){
-				sarResponse = prepareSARResponse(1400, Constants.ERROR_STATUS, "Folder does not exist", null);
+				sarResponse = prepareSARResponse(1409, Constants.ERROR_STATUS, Constants.FOLDER_NOT_EXISTS, null);
 				return sarResponse;
 			}
 
@@ -58,10 +59,15 @@ public class SARService {
 					.setAcl(new ArrayList<>(Arrays.asList(Acl.of(User.ofAllUsers(), Role.READER)))).build(), inStream);
 			
 			String url = prepareDownloadURL(blobInfo.getMediaLink());
-			sarResponse = prepareSARResponse(1200, Constants.SUCCESS_STATUS, "SAR Report has been created successfully", url);
+			sarResponse = prepareSARResponse(1200, Constants.SUCCESS_STATUS, Constants.SAR_SUCCESS, url);
 			
-		} catch (Exception e) {
-			sarResponse = prepareSARResponse(1300, Constants.ERROR_STATUS, e.getMessage(), null);
+		} catch (SARValidationException e) {
+			sarResponse = prepareSARResponse(e.getCode(), Constants.ERROR_STATUS, e.getMessage(), null);
+			return sarResponse;
+		}
+
+		catch (Exception e) {
+			sarResponse = prepareSARResponse(1500, Constants.ERROR_STATUS, e.getMessage(), null);
 			return sarResponse;
 		}
 		
